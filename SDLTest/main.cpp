@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	}
 
 	// the Game
-	Game game = Game({ 10, 40, 250 });
+	Game game = Game(window, { 10, 40, 500 });
 	game.initialize();
 
 	SDL_Event event;
@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
 					break;
 			}
 
+#if 0
 			if (!game.get_active_keys().empty()) {
 				std::cout << "Active keys: " << std::endl;
 				for (auto key : game.get_active_keys())
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
 				}
 				std::cout << std::endl;
 			}
+#endif
 		}
 
 		SDL_BlitSurface(imgSurface, NULL, windowSurface, NULL);

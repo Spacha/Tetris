@@ -11,7 +11,11 @@ const char *getKey(SDL_Keycode keycode)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Game::Game(GameConfig config) : m_running(false), m_config(config)
+Game::Game(SDL_Window* window, GameConfig config)
+	: m_window(window),
+	m_config(config),
+	m_running(false),
+	m_time_since_tick(0)
 {
 	std::cout << "Hello! Let's start!" << std::endl;
 }
@@ -28,9 +32,17 @@ void Game::initialize()
 	m_running = true;
 }
 
-void Game::update(double deltaTime)
+void Game::update(double delta_time)
 {
+	m_time_since_tick += delta_time;
 
+	if (m_time_since_tick >= m_config.update_time) {
+		m_time_since_tick = 0;
+
+		std::cout << "Tick game" << std::endl;
+
+		setTitle("SDL Test | FPS: " + std::to_string(1000 / delta_time));
+	}
 }
 
 void Game::handleKeyDown(SDL_KeyboardEvent& key)
@@ -86,4 +98,9 @@ void Game::rotateBlock()
 void Game::moveBlockDown()
 {
 	std::cout << "Block:Down" << std::endl;
+}
+
+void Game::setTitle(std::string title)
+{
+	SDL_SetWindowTitle(m_window, title.c_str());
 }

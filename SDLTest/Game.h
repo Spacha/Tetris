@@ -2,14 +2,53 @@
 
 #include <iostream>
 #include <string>
+#include <queue>
 #include <set>
 #include <SDL.h>
+#include "Block.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 const char *getKey(SDL_Keycode keycode);
 
 ////////////////////////////////////////////////////////////////////////////////
+
+/*
+*    #
+*    #
+*   (#)     # #(#)# #
+*    #
+*    #
+* 
+*             #      #      #
+*  #(#)#    #(#)   #(#)#   (#)#
+*    #        #             #
+* 
+*   # #
+*   # #
+*
+*  # #        #
+*   (#)#   (#)#
+*           #
+*
+*    # #    #
+*  #(#)    (#)#
+*             #
+*/
+// block: shape(), color(SDL_Color)
+
+struct GameConfig {
+	unsigned int map_width;
+	unsigned int map_height;
+	double update_time;		// TODO: Use progression to make the game speed up
+
+	std::string to_string()
+	{
+		return "map_width: " + std::to_string(map_width) + ", " +
+			"map_height: " + std::to_string(map_height) + ", " +
+			"update_time: " + std::to_string(update_time);
+	}
+};
 
 // Tetris
 //
@@ -32,34 +71,27 @@ const char *getKey(SDL_Keycode keycode);
 //   * Rotate falling block once
 // * Key down (Down):
 //   * Move falling block once down
-struct GameConfig {
-	unsigned int map_width;
-	unsigned int map_height;
-	double update_time;		// TODO: Use progression to make the game speed up
-
-	std::string to_string()
-	{
-		return "map_width: " + std::to_string(map_width) + ", " +
-			"map_height: " + std::to_string(map_height) + ", " +
-			"update_time: " + std::to_string(update_time);
-	}
-};
 
 class Game
 {
 private:
+	SDL_Window* m_window;
 	bool m_running;
 	GameConfig m_config;
 	std::set<SDL_Keycode> m_active_keys;
+	std::queue<Block> m_block_queue;
+	double m_time_since_tick;
 
 	void moveBlockLeft();
 	void moveBlockRight();
 	void rotateBlock();
 	void moveBlockDown();
 
+	void setTitle(std::string title);
+
 public:
 
-	Game(GameConfig config);
+	Game(SDL_Window* window, GameConfig config);
 	~Game();
 
 	void initialize();
