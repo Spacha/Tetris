@@ -7,6 +7,10 @@ const int WIDTH = 800, HEIGHT = 600;
 
 int main(int argc, char *argv[])
 {
+	// cast to void to suppress warnings
+	(void)argc;
+	(void)argv;
+
 	SDL_Window* window = nullptr;
 	SDL_Surface* imgSurface = nullptr;
 	SDL_Surface* windowSurface = nullptr;
@@ -53,7 +57,7 @@ int main(int argc, char *argv[])
 	}
 
 	// the Game
-	Game game = Game();
+	Game game = Game({ 10, 40, 250 });
 	game.initialize();
 
 	SDL_Event event;
@@ -75,28 +79,33 @@ int main(int argc, char *argv[])
 		{
 			switch (event.type)
 			{
-				case SDL_KEYDOWN: {
+				case SDL_MOUSEMOTION:
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					break;
+				case SDL_MOUSEBUTTONUP:
+					break;
+				case SDL_KEYDOWN:
 					game.handleKeyDown(event.key);
 					break;
-				}
-				case SDL_KEYUP: {
+				case SDL_KEYUP:
 					game.handleKeyUp(event.key);
 					break;
-				}
-				case SDL_QUIT: {
+				case SDL_QUIT:
 					game.stop();
 					break;
-				}
 				default:
 					break;
 			}
 
-			std::cout << "Active keys: " << std::endl;
-			for (auto key : game.activeKeys)
-			{
-				std::cout << getKey(key) << ", ";
+			if (!game.get_active_keys().empty()) {
+				std::cout << "Active keys: " << std::endl;
+				for (auto key : game.get_active_keys())
+				{
+					std::cout << getKey(key) << ", ";
+				}
+				std::cout << std::endl;
 			}
-			std::cout << std::endl;
 		}
 
 		SDL_BlitSurface(imgSurface, NULL, windowSurface, NULL);
